@@ -34,7 +34,7 @@ const questions = [
       if (value.length >= 2) {
         return true;
       }
-      return "Please enter a city";
+      return "Please enter a valid city.";
     }
   },
   {
@@ -45,7 +45,7 @@ const questions = [
       if (value.length >= 2) {
         return true;
       }
-      return "Please enter a state.";
+      return "Please enter a valid state.";
     }
   },
   {
@@ -67,7 +67,7 @@ const questions = [
       if (value.length >= 2) {
         return true;
       }
-      return "Please enter a country";
+      return "Please enter a valid country";
     }
   }
 ];

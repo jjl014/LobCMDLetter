@@ -10,11 +10,8 @@
   "author": "Jimmy Li &lt;jimmyli921@gmail.com&gt;",
   "license": "ISC",
   "dependencies": {
-    "axios": "^0.17.1",
-    "commander": "^2.12.2",
     "inquirer": "^4.0.1",
     "lob": "^5.0.0",
-    "node-fetch": "^1.7.3",
-    "whatwg-fetch": "^2.0.3"
+    "node-fetch": "^1.7.3"
   }
 }

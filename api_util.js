@@ -1,5 +1,4 @@
 var fetch = require('node-fetch');
-// var fetch = require('whatwg-fetch');
 
 const apiURL = "https://www.googleapis.com/civicinfo/v2/representatives";
 const apiKey = "AIzaSyDqTXtHz-Crg8vKVakUQqZLldFp_k-X9fM";

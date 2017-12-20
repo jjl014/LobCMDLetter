@@ -115,7 +115,8 @@ function createLetter() {
     merge_variables: {
       name: to.name,
       from: capitalizeName(from.name),
-      message: message
+      message: message,
+      date: new Date().toDateString()
     },
     color: true
   }, function (err, res) {

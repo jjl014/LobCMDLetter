@@ -1,0 +1,19 @@
+{
+  "name": "LobCMDLetter",
+  "version": "1.0.0",
+  "description": "CLI utility to send emails to your legislators",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Jimmy Li &lt;jimmyli921@gmail.com&gt;",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.17.1",
+    "commander": "^2.12.2",
+    "inquirer": "^4.0.1",
+    "node-fetch": "^1.7.3",
+    "whatwg-fetch": "^2.0.3"
+  }
+}

@@ -1,80 +1,7 @@
 var inquirer = require('inquirer');
 var getRepList = require('./api_util');
 var Lob = require('lob')('test_d07aaf24ea2cd3d8b0d93ac19972de6882c');
-
-const questions = [
-  {
-    name: 'name',
-    type: 'input',
-    message: 'From Name:',
-    validate: function(value) {
-      if(value.length) {
-        return true;
-      }
-      return "Please enter a name";
-    }
-  },
-  {
-    name: 'address1',
-    type: 'input',
-    message: 'From Address Line 1:',
-    validate: function(value) {
-      if (/[A-Za-z]/.test(value) && /\d/.test(value)) {
-        return true;
-      }
-      return "Please enter a valid address";
-    }
-  },
-  {
-    name: 'address2',
-    type: 'input',
-    message: 'From Address Line 2:'
-  },
-  {
-    name: 'city',
-    type: 'input',
-    message: 'From City:',
-    validate: function(value) {
-      if (value.length) {
-        return true;
-      }
-      return "Please enter a city";
-    }
-  },
-  {
-    name: 'state',
-    type: 'input',
-    message: 'From State:',
-    validate: function(value) {
-      if (value.length) {
-        return true;
-      }
-      return "Please enter a state.";
-    }
-  },
-  {
-    name: 'zip',
-    type: 'input',
-    message: 'From Zip Code:',
-    validate: function(value) {
-      if (/\d/.test(value)) {
-        return true;
-      }
-      return "Please enter a valid zip code.";
-    }
-  },
-  {
-    name: 'country',
-    type: 'input',
-    message: 'From Country:',
-    validate: function(value) {
-      if (value.length) {
-        return true;
-      }
-      return "Please enter a country";
-    }
-  }
-];
+var questions = require('./questions');
 
 let repList = [];
 let messageObj = {};
@@ -115,7 +42,17 @@ function promptMessage(answer) {
   return inquirer.prompt({
     name: 'message',
     type: 'input',
-    message: 'Enter your message to send:'
+    message: 'Enter your message to send:',
+    validate: function(value) {
+      if (!value.length) {
+        return "Please enter a message.";
+      } else if (value.length <= 500) {
+        return true;
+      }
+      return "Message cannot exceed 500 characters. " +
+        `You message currently contains ${value.length} characters. ` +
+        "Press the up arrow key to show your old message.";
+    }
   });
 }
 
@@ -146,18 +83,19 @@ function createLetter(answer2) {
       address_zip: from.zip,
       address_country: from.country,
     },
-    file: `<html style="padding-top: 3in; margin: .5in;"><p>{{date}}</p><p style="padding-bottom:0.2in;">Dear {{name}},</p><p style="padding-bottom:0.2in;">${message}</p><p>Sincerely,</p>{{from}}</html>`,
+    file: 'tmpl_0648252e6b30cc5',
     merge_variables: {
       name: to.name,
       from: capitalizeName(from.name),
-      date: new Date().toDateString().slice(4)
+      date: new Date().toDateString().slice(4),
+      message: message
     },
     color: true
   }, function (err, res) {
     if (err) {
       return err;
     } else {
-      console.log("Here is a link to the preview for your letter:");
+      console.log("Here is a link to the preview of your letter:");
       console.log(res.url);
     }
   });

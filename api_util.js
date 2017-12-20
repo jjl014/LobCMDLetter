@@ -5,8 +5,8 @@ const apiURL = "https://www.googleapis.com/civicinfo/v2/representatives";
 const apiKey = "AIzaSyDqTXtHz-Crg8vKVakUQqZLldFp_k-X9fM";
 
 function getRepList(userInput) {
-  const {address1, address2, city, state, country, zipcode, message} = userInput;
-  const fullAddress = [address1,address2,city,state,country,zipcode].join("%20");
+  const {address1, address2, city, state, country, zip, message} = userInput;
+  const fullAddress = [address1,address2,city,state,country,zip].join("%20");
   const roles = ["legislatorLowerBody", "legislatorUpperBody"].join("&roles=");
   return fetch(`${apiURL}?key=${apiKey}&address=${fullAddress}&roles=${roles}`)
     .then(checkStatus)

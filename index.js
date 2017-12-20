@@ -1,6 +1,7 @@
 var inquirer = require('inquirer');
 var commander = require('commander');
 var getRepList = require('./api_util');
+var Lob = require('lob')('test_d07aaf24ea2cd3d8b0d93ac19972de6882c');
 
 const questions = [
   // {
@@ -56,7 +57,8 @@ inquirer.prompt(questions).then(answers => {
         })[0];
         messageObj = Object.assign(messageObj, {"to": official});
         promptMessage().then(answer2 => {
-          console.log(messageObj);
+          messageObj = Object.assign(messageObj, {"message": answer2.message});
+          createLetter();
         });
       });
     })
@@ -79,5 +81,37 @@ function promptMessage() {
     name: 'message',
     type: 'input',
     message: 'Enter your message to send:'
+  });
+}
+
+function createLetter() {
+  const {from, to, message} = messageObj;
+  Lob.letters.create({
+    description: 'Demo Letter',
+    to: {
+      name: 'Harry Zhang',
+      address_line1: '185 Berry St',
+      address_line2: '# 6100',
+      address_city: 'San Francisco',
+      address_state: 'CA',
+      address_zip: '94107',
+      address_country: 'US',
+    },
+    from: {
+      name: 'Leore Avidar',
+      address_line1: '185 Berry St',
+      address_line2: '# 6100',
+      address_city: 'San Francisco',
+      address_state: 'CA',
+      address_zip: '94107',
+      address_country: 'US',
+    },
+    file: '<html style="padding-top: 3in; margin: .5in;">HTML Letter for {{name}}</html>',
+    merge_variables: {
+      name: 'Harry'
+    },
+    color: true
+  }, function (err, res) {
+    console.log(err, res);
   });
 }

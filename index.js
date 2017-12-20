@@ -1,5 +1,4 @@
 var inquirer = require('inquirer');
-var commander = require('commander');
 var getRepList = require('./api_util');
 var Lob = require('lob')('test_d07aaf24ea2cd3d8b0d93ac19972de6882c');
 
@@ -49,24 +48,19 @@ inquirer.prompt(questions).then(answers => {
   messageObj = Object.assign(messageObj, {"from": answers});
   getRepList(answers)
     .then(list => {
-      repList = list;
       chooseOfficial(list)
         .then(answer => {
-        const official = repList.filter(rep => {
-          return rep.name === answer.senator.split(" - ")[0];
-        })[0];
-        messageObj = Object.assign(messageObj, {"to": official});
-        promptMessage().then(answer2 => {
-          messageObj = Object.assign(messageObj, {"message": answer2.message});
-          createLetter()
-            .catch(err => console.log(JSON.stringify(err)));
+          promptMessage(answer)
+            .then(answer2 => {
+              createLetter(answer2)
+                .catch(err => console.log(JSON.stringify(err)));
+            });
         });
-      });
-    })
-    .catch(err => console.log(JSON.stringify(err)));
+    }).catch(err => console.log("Error:", err.response.statusText));
 });
 
 function chooseOfficial(list){
+  repList = list;
   return inquirer.prompt({
     name: 'senator',
     type: 'list',
@@ -77,7 +71,11 @@ function chooseOfficial(list){
   });
 }
 
-function promptMessage() {
+function promptMessage(answer) {
+  const official = repList.filter(rep => {
+    return rep.name === answer.senator.split(" - ")[0];
+  })[0];
+  messageObj = Object.assign(messageObj, {"to": official});
   return inquirer.prompt({
     name: 'message',
     type: 'input',
@@ -89,7 +87,8 @@ function capitalizeName(name) {
   return name.split(" ").map(part => part[0].toUpperCase() + part.slice(1)).join(" ");
 }
 
-function createLetter() {
+function createLetter(answer2) {
+  messageObj = Object.assign(messageObj, {"message": answer2.message});
   const {from, to, message} = messageObj;
   return Lob.letters.create({
     description: 'Letter To Legislator',
@@ -111,17 +110,16 @@ function createLetter() {
       address_zip: from.zip,
       address_country: from.country,
     },
-    file: 'tmpl_0648252e6b30cc5',
+    file: `<html style="padding-top: 3in; margin: .5in;"><p>{{date}}</p><p style="padding-bottom:0.2in;">Dear {{name}},</p><p style="padding-bottom:0.2in;">${message}</p><p>Sincerely,</p>{{from}}</html>`,
     merge_variables: {
       name: to.name,
       from: capitalizeName(from.name),
-      message: message,
-      date: new Date().toDateString()
+      date: new Date().toDateString().slice(4)
     },
     color: true
   }, function (err, res) {
     if (err) {
-      console.log(JSON.stringify(err));
+      return err;
     } else {
       console.log("Here is a link to the preview for your letter:");
       console.log(res.url);

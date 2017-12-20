@@ -6,12 +6,24 @@ const questions = [
   {
     name: 'name',
     type: 'input',
-    message: 'From Name:'
+    message: 'From Name:',
+    validate: function(value) {
+      if(value.length) {
+        return true;
+      }
+      return "Please enter a name";
+    }
   },
   {
     name: 'address1',
     type: 'input',
-    message: 'From Address Line 1:'
+    message: 'From Address Line 1:',
+    validate: function(value) {
+      if (/[A-Za-z]/.test(value) && /\d/.test(value)) {
+        return true;
+      }
+      return "Please enter a valid address";
+    }
   },
   {
     name: 'address2',
@@ -21,22 +33,46 @@ const questions = [
   {
     name: 'city',
     type: 'input',
-    message: 'From City:'
+    message: 'From City:',
+    validate: function(value) {
+      if (value.length) {
+        return true;
+      }
+      return "Please enter a city";
+    }
   },
   {
     name: 'state',
     type: 'input',
-    message: 'From State:'
+    message: 'From State:',
+    validate: function(value) {
+      if (value.length) {
+        return true;
+      }
+      return "Please enter a state.";
+    }
   },
   {
     name: 'zip',
     type: 'input',
-    message: 'From Zip Code:'
+    message: 'From Zip Code:',
+    validate: function(value) {
+      if (/\d/.test(value)) {
+        return true;
+      }
+      return "Please enter a valid zip code.";
+    }
   },
   {
     name: 'country',
     type: 'input',
-    message: 'From Country:'
+    message: 'From Country:',
+    validate: function(value) {
+      if (value.length) {
+        return true;
+      }
+      return "Please enter a country";
+    }
   }
 ];
 
